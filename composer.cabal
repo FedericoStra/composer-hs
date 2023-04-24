@@ -88,7 +88,10 @@ test-suite composer-test
     hs-source-dirs:   test
 
     -- The entrypoint to the test suite.
-    main-is:          Test.hs
+    main-is:          Tests.hs
 
     -- Test dependencies.
-    build-depends:    base
+    build-depends:
+        base,
+        composer,
+        HUnit ^>=1.6.2
