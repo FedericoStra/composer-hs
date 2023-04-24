@@ -34,33 +34,33 @@ tests =
 -- `comp` and `comp'`
 
 testCompEmpty cmp =
-  "empty" ~: (cmp [] 42) ~?= 42
+  "empty" ~: cmp [] 42 ~?= 42
 
 testCompInt cmp =
   TestList
-    [ "2x+1" ~: (cmp [(+ 1), (* 2)] 3) ~?= 7,
-      "2(x+1)" ~: (cmp [(* 2), (+ 1)] 3) ~?= 8
+    [ "2x+1" ~: cmp [(+ 1), (* 2)] 3 ~?= 7,
+      "2(x+1)" ~: cmp [(* 2), (+ 1)] 3 ~?= 8
     ]
 
 testCompString cmp =
   TestList
-    [ "hello world" ~: (cmp [("Hello " ++), (++ "!")] "World") ~?= "Hello World!",
-      "string" ~: (cmp [(\s -> "zz" ++ s ++ "zz"), map toUpper] "warning") ~?= "zzWARNINGzz"
+    [ "hello world" ~: cmp [("Hello " ++), (++ "!")] "World" ~?= "Hello World!",
+      "string" ~: cmp [\s -> "zz" ++ s ++ "zz", map toUpper] "warning" ~?= "zzWARNINGzz"
     ]
 
 -- `compRev` and `compRev'`
 
 testCompRevEmpty cmp =
-  "empty" ~: (cmp [] 42) ~?= 42
+  "empty" ~: cmp [] 42 ~?= 42
 
 testCompRevInt cmp =
   TestList
-    [ "2(x+1)" ~: (cmp [(+ 1), (* 2)] 3) ~?= 8,
-      "2x+1" ~: (cmp [(* 2), (+ 1)] 3) ~?= 7
+    [ "2(x+1)" ~: cmp [(+ 1), (* 2)] 3 ~?= 8,
+      "2x+1" ~: cmp [(* 2), (+ 1)] 3 ~?= 7
     ]
 
 testCompRevString cmp =
   TestList
-    [ "hello world" ~: (cmp [("Hello " ++), (++ "!")] "World") ~?= "Hello World!",
-      "string" ~: (cmp [(\s -> "zz" ++ s ++ "zz"), map toUpper] "warning") ~?= "ZZWARNINGZZ"
+    [ "hello world" ~: cmp [("Hello " ++), (++ "!")] "World" ~?= "Hello World!",
+      "string" ~: cmp [\s -> "zz" ++ s ++ "zz", map toUpper] "warning" ~?= "ZZWARNINGZZ"
     ]
