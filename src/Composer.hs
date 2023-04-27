@@ -17,7 +17,8 @@
 -- In addition there are 'compRev' and 'compRev'' which compose in reverse order.
 --
 -- This module also defines two functions, 'compMap' and 'compMap_', which build a composition
--- of functions parameterized by a list, along with their strict counterparts 'compMap'' and 'compMap_''.
+-- of functions parameterized by a list, along with their strict counterparts 'compMapRev''
+-- and 'compMapRev_'' which compose in reverse order.
 module Composer
   ( -- * Simple composition
 
@@ -67,10 +68,12 @@ module Composer
     --
     -- @'compMap_' f f0 = (. f0) . 'compMap' f@
     compMap,
-    compMap',
+    -- compMap',
+    compMapRev',
     compMap_,
-    compMap_',
-    compMap'_,
+    -- compMap_',
+    -- compMap'_,
+    compMapRev_',
   )
 where
 
@@ -100,11 +103,17 @@ compRev' = foldl' (flip (.)) id
 compMap :: (b -> (a -> a)) -> [b] -> (a -> a)
 compMap = flip . foldr
 
--- | Maps a list to a sequence of functions and composes them.
+-- -- | Maps a list to a sequence of functions and composes them.
+-- --
+-- -- Equivalent to 'compMap', but implemented with 'foldl''.
+-- compMap' :: (b -> (a -> a)) -> [b] -> (a -> a)
+-- compMap' = flip . foldl' . flip
+
+-- | Maps a list to a sequence of functions and composes them in reverse order.
 --
--- Equivalent to 'compMap', but implemented with 'foldl''.
-compMap' :: (b -> (a -> a)) -> [b] -> (a -> a)
-compMap' = flip . foldl' . flip
+-- Implemented with 'foldl''.
+compMapRev' :: (b -> (a -> a)) -> [b] -> (a -> a)
+compMapRev' = flip . foldl' . flip
 
 -- | Maps a list to a sequence of functions and composes them,
 -- pre-composing everything with an extra function.
@@ -114,16 +123,23 @@ compMap' = flip . foldl' . flip
 compMap_ :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
 compMap_ f f0 = flip (foldr f . f0)
 
--- | Maps a list to a sequence of functions and composes them,
--- pre-composing everything with an extra function.
---
--- Equivalent to 'compMap_', but implemented with 'foldl''.
-compMap_' :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
-compMap_' f f0 = flip (foldl' (flip f) . f0)
+-- -- | Maps a list to a sequence of functions and composes them,
+-- -- pre-composing everything with an extra function.
+-- --
+-- -- Equivalent to 'compMap_', but implemented with 'foldl''.
+-- compMap_' :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
+-- compMap_' f f0 = flip (foldl' (flip f) . f0)
 
--- | Maps a list to a sequence of functions and composes them,
+-- -- | Maps a list to a sequence of functions and composes them,
+-- -- pre-composing everything with an extra function.
+-- --
+-- -- This is just an alias of 'compMap_''.
+-- compMap'_ :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
+-- compMap'_ = compMap_'
+
+-- | Maps a list to a sequence of functions and composes them in reverse order,
 -- pre-composing everything with an extra function.
 --
--- This is just an alias of 'compMap_''.
-compMap'_ :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
-compMap'_ = compMap_'
+-- Implemented with 'foldl''.
+compMapRev_' :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
+compMapRev_' f f0 = flip (foldl' (flip f) . f0)
