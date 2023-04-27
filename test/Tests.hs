@@ -22,6 +22,7 @@ tests =
       "comp String" ~: testCompString comp,
       "comp' Int" ~: testCompInt comp',
       "comp' String" ~: testCompString comp',
+      "comp Infinite" ~: testCompInfinite comp,
       "compRev Empty" ~: testCompRevEmpty compRev,
       "compRev' Empty" ~: testCompRevEmpty compRev',
       "compRev Int" ~: testCompRevInt compRev,
@@ -46,6 +47,11 @@ testCompString cmp =
   TestList
     [ "hello world" ~: cmp [("Hello " ++), (++ "!")] "World" ~?= "Hello World!",
       "string" ~: cmp [\s -> "zz" ++ s ++ "zz", map toUpper] "warning" ~?= "zzWARNINGzz"
+    ]
+
+testCompInfinite cmp =
+  TestList
+    [ "numbers" ~: (take 20 $ comp (map ((++) . show) [0 ..]) ".") ~?= "01234567891011121314"
     ]
 
 -- `compRev` and `compRev'`
