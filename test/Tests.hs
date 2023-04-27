@@ -1,17 +1,17 @@
 module Main (main) where
 
 import Composer
-import qualified Control.Monad as Monad
+import Control.Monad (when)
 import Data.Char (toUpper)
-import qualified System.Exit as Exit
-import Test.HUnit
+import System.Exit (exitFailure)
+import Test.HUnit hiding (counts)
 
 main :: IO ()
 main = do
   counts <- runTestTT tests
   let hasErrors = errors counts /= 0
       hasFailures = failures counts /= 0
-  Monad.when (hasErrors || hasFailures) Exit.exitFailure
+  when (hasErrors || hasFailures) exitFailure
 
 tests =
   TestList
