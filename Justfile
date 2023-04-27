@@ -23,6 +23,10 @@ test: fmt
 fmt:
 	fd -e hs -X ormolu -i
 
+# Run the repl loading the library as object code
+repl:
+	cabal repl --repl-options=-fobject-code
+
 # Clean the project
 clean:
 	cabal clean
