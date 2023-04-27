@@ -11,11 +11,13 @@ build: fmt
 
 # Document the project.
 doc: fmt
-	cabal haddock --haddock-hyperlink-source --haddock-quickjump
+	cabal haddock --haddock-hyperlink-source --haddock-quickjump \
+	| colout '^(Warning:)(.*)$' "red,yellow"
 
 # Test the project.
 test: fmt
-	cabal test
+	cabal test \
+	| colout -T ~/Code/haskell/composer/.colout -t cabal
 
 # Format the Haskell source code
 fmt:
