@@ -3,6 +3,7 @@
 
 -- |
 -- Module      :  Composer
+-- Description :  Tools to help with function composition.
 -- Copyright   :  (c) Federico Stra 2023
 -- License     :  MIT (see the LICENSE file in the distribution)
 --
