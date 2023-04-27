@@ -77,6 +77,8 @@ library
     -- Base language which the package is written in.
     default-language: Haskell2010
 
+    ghc-options:      -Wall
+
 test-suite composer-test
     -- Base language which the package is written in.
     default-language: Haskell2010
@@ -95,3 +97,8 @@ test-suite composer-test
         base,
         composer,
         HUnit ^>=1.6.2
+
+    ghc-options:
+        -Wall
+        -Wno-missing-signatures
+        -Wno-type-defaults
