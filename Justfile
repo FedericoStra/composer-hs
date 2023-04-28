@@ -12,7 +12,9 @@ build: fmt
 # Document the project.
 doc: fmt
 	cabal haddock --haddock-hyperlink-source --haddock-quickjump \
-	| colout '^(Warning:)(.*)$' "red,yellow"
+	| colout '^(Warning:)(.*)$' "red,yellow" \
+	| colout '^  Missing documentation for:$' "red" \
+	| colout '^    (\S+) (\(.*\))$' "yellow,white"
 
 # Test the project.
 test: fmt
