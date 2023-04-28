@@ -5,6 +5,7 @@ import Control.Monad (when)
 import Data.Char (toUpper)
 import System.Exit (exitFailure)
 import Test.HUnit hiding (counts)
+import Tests.Identities (testIdentities)
 
 main :: IO ()
 main = do
@@ -13,7 +14,9 @@ main = do
       hasFailures = failures counts /= 0
   when (hasErrors || hasFailures) exitFailure
 
-tests =
+tests = TestList ["behavior" ~: testBehavior, "identities" ~: testIdentities]
+
+testBehavior =
   TestList
     [ -- simple composition
       "comp Empty" ~: testCompEmpty comp,

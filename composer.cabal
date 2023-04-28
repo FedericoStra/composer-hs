@@ -92,6 +92,8 @@ test-suite composer-test
     -- The entrypoint to the test suite.
     main-is:          Tests.hs
 
+    other-modules:    Tests.Identities
+
     -- Test dependencies.
     build-depends:
         base,
