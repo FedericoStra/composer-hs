@@ -75,6 +75,18 @@ module Composer
     -- compMap_',
     -- compMap'_,
     compMapRev_',
+
+    -- * Identities #identities#
+    -- $identities
+
+    -- ** Universal property #universal_property#
+    -- $universal_property
+
+    -- ** Fusion property #fusion_property#
+    -- $fusion_property
+
+    -- ** Additional identities #additional_identities#
+    -- $additional_identities
   )
 where
 
@@ -100,7 +112,6 @@ compRev' = foldl' (flip (.)) id
 -- | Maps a list to a sequence of functions and composes them.
 --
 -- Implemented with 'foldr'.
--- @'compMap' f@ is equivalent to @'compMap_' f id@.
 compMap :: (b -> (a -> a)) -> [b] -> (a -> a)
 compMap = flip . foldr
 
@@ -120,7 +131,6 @@ compMapRev' = flip . foldl' . flip
 -- pre-composing everything with an extra function.
 --
 -- Implemented with 'foldr'.
--- @'compMap_' f f0@ is equivalent to @(. f0) . 'compMap' f@.
 compMap_ :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
 compMap_ f f0 = flip (foldr f . f0)
 
@@ -144,3 +154,122 @@ compMap_ f f0 = flip (foldr f . f0)
 -- Implemented with 'foldl''.
 compMapRev_' :: (b -> (a -> a)) -> (a -> a) -> [b] -> (a -> a)
 compMapRev_' f f0 = flip (foldl' (flip f) . f0)
+
+-- $identities
+--
+-- With reference to the article
+--
+-- -   /A tutorial on the universality and expressiveness of fold/,
+--     Graham Hutton,
+--     /J. Functional Programming/ 9 (4): 355–372, July 1999,
+--     http://www.cs.nott.ac.uk/~pszgmh/fold.pdf
+--
+-- we can say that 'comp' and 'compMap' satisfy both a [universal property](#g:universal_property)
+-- and a [fusion property](#g:fusion_property).
+-- Moreover, there are several other equivalences, such as the
+-- [additional identities](#g:additional_identities).
+
+-- $universal_property
+--
+-- The /universal properties/ of 'compMap' and 'compMap_' can be stated as an equivalence
+-- between two definitions of a function @g@ that processes lists.
+--
+-- === Universal property of 'compMap'
+--
+-- The following definitions of a function @g@ are equivalent:
+--
+-- -
+--
+--     @
+--     g []     = 'id'
+--     g (x:xs) = f x . g xs
+--     @
+--
+-- -   @g = 'compMap' f@
+--
+-- === Universal property of 'compMap_'
+--
+-- The following definitions of a function @g@ are equivalent:
+--
+-- -
+--
+--     @
+--     g []     = f0
+--     g (x:xs) = f x . g xs
+--     @
+--
+-- -   @g = 'compMap_' f f0@
+
+-- $fusion_property
+--
+-- The /fusion property/ of 'compMap' could be more appropriately called /commutation property/.
+-- It provides a simple condition under which the composition of an arbitrary function and a 'compMap'
+-- can be reversed.
+--
+-- The /fusion property/ of 'compMap_' provides two simple conditions that are sufficient to ensure
+-- that the composition of an arbitrary function and a 'compMap_' can be fused together into
+-- a single 'compMap_'.
+--
+-- === Fusion property of 'compMap'
+--
+-- If the following identity holds
+--
+-- @
+-- (h .) . f == (. h) . g
+-- @
+--
+-- then we have
+--
+-- @
+-- (h .) . 'compMap' f == (. h) . 'compMap' g
+-- @
+--
+-- Notice that the commutation relationship can also be written equivalently as
+--
+-- @h . f x == g x . h@
+--
+-- and the thesis as
+--
+-- @
+-- h . 'compMap' f xs == 'compMap' g xs . h
+-- @
+--
+-- === Fusion property of 'compMap_'
+--
+-- If the following identities hold
+--
+-- @
+-- h . f0 == g0
+-- (h .) . f == (. h) . g
+-- @
+--
+-- then we have
+--
+-- @
+-- (h .) . 'compMap_' f f0 == 'compMap_' g g0
+-- @
+--
+-- Notice that the commutation relationship can also be written equivalently as
+--
+-- @h . f x == g x . h@
+--
+-- and the thesis as
+--
+-- @
+-- h . 'compMap_' f f0 xs == 'compMap_' g g0 xs
+-- @
+
+-- $additional_identities
+-- @
+-- 'compRev' == 'comp'    . 'Prelude.reverse'
+-- 'comp'    == 'compRev' . 'Prelude.reverse'
+--
+-- 'comp'      == 'compMap' 'id'
+--
+-- 'compMap' f == 'comp' . 'Prelude.map' f
+--           == 'foldr' (\x chain -> f x . chain) 'id'
+--           == 'foldr' ((.) . f) 'id'
+--
+-- 'compMap_' f f0 == (. f0) . 'compMap' f
+-- 'compMap' f     == 'compMap_' f 'id'
+-- @
